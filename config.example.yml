@@ -1,0 +1,71 @@
+# Auto-SignIn 配置文件
+# 复制此文件为 config.yml 并填入你的账号信息
+
+# 定时任务配置
+schedule:
+  # Cron 表达式，默认每天上午9点执行
+  # 格式: 分 时 日 月 周
+  cron: "0 9 * * *"
+  
+  # 可选值:
+  # "0 9 * * *"    - 每天上午9点
+  # "0 */6 * * *"  - 每6小时
+  # "0 9,21 * * *" - 每天上午9点和晚上9点
+
+# 通知配置
+notifications:
+  # 钉钉机器人
+  dingtalk:
+    enabled: false
+    webhook: "https://oapi.dingtalk.com/robot/send?access_token=YOUR_TOKEN"
+    secret: "YOUR_SECRET"
+  
+  # Server酱 (http://sc.ftqq.com/)
+  serverchan:
+    enabled: false
+    key: "YOUR_KEY"
+  
+  # PushPlus (http://www.pushplus.plus/)
+  pushplus:
+    enabled: false
+    token: "YOUR_TOKEN"
+  
+  # 邮件通知
+  email:
+    enabled: false
+    smtp_server: "smtp.qq.com"
+    smtp_port: 587
+    sender: "your@email.com"
+    password: "your_auth_code"
+    receiver: "receiver@email.com"
+
+# 平台账号配置
+# 每个平台可以配置多个账号
+accounts:
+  # 哔哩哔哩
+  # Cookie 获取: 登录后 F12 → Application → Cookies
+  bilibili:
+    - name: "账号1"
+      sessdata: ""
+      bili_jct: ""
+      buvid3: ""
+  
+  # 网易云音乐
+  netease_music:
+    - name: "账号1"
+      cookie: ""
+  
+  # 知乎
+  zhihu:
+    - name: "账号1"
+      cookie: ""
+  
+  # 掘金
+  juejin:
+    - name: "账号1"
+      cookie: ""
+  
+  # V2EX
+  v2ex:
+    - name: "账号1"
+      cookie: ""

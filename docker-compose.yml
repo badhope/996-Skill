@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  auto-signin:
+    build: .
+    container_name: auto-signin
+    restart: unless-stopped
+    volumes:
+      - ./config.yml:/app/config.yml:ro
+      - ./logs:/app/logs
+    environment:
+      - TZ=Asia/Shanghai
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
