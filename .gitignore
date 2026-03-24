@@ -24,6 +24,7 @@ wheels/
 venv/
 ENV/
 env/
+.venv/
 
 # IDE
 .vscode/
@@ -36,6 +37,7 @@ env/
 config.yml
 *.config.yml
 .env
+.env.*
 
 # 日志
 logs/
@@ -45,12 +47,19 @@ logs/
 data/
 *.db
 *.sqlite
+*.sqlite3
 
 # 测试
 .coverage
-htmlcov/
 .pytest_cache/
+htmlcov/
 
-# 其他
+# Docker
+*.pid
+
+# OS
 .DS_Store
 Thumbs.db
+
+# Auto-SignIn specific
+autosignin/storage.db
