@@ -1,6 +1,6 @@
 # Auto-SignIn
 
-A powerful multi-platform automatic sign-in system supporting Bilibili, NetEase Music, Zhihu, Juejin, V2EX and other major platforms.
+一个强大的多平台自动签到系统，支持哔哩哔哩、网易云音乐、知乎、掘金、V2EX 等主流平台。
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -9,155 +9,155 @@ A powerful multi-platform automatic sign-in system supporting Bilibili, NetEase 
 
 [中文](./README.md) | [English](./README_EN.md)
 
-## Features
+## 功能特性
 
-- **Multi-Platform Support** - Bilibili, NetEase Music, Zhihu, Juejin, V2EX
-- **Scheduled Tasks** - Flexible cron expression configuration
-- **Docker Ready** - One-click deployment
-- **Multi-Account Management** - Simultaneous sign-in for multiple accounts
-- **Multi-Channel Notifications** - DingTalk, ServerChan, PushPlus, Email, Telegram
-- **Complete Logging** - Full sign-in logs and error tracking
-- **Resilience Patterns** - Retry, Circuit Breaker, Rate Limiter, Bulkhead
-- **Plugin Architecture** - Easy to extend new platforms
+- **多平台支持** - 哔哩哔哩、网易云音乐、知乎、掘金、V2EX
+- **定时任务** - 支持 Cron 表达式灵活配置
+- **Docker 支持** - 一键部署，开箱即用
+- **多账号管理** - 支持多账号同时签到
+- **多渠道通知** - 钉钉、Server酱、PushPlus、邮件、Telegram
+- **完整日志** - 完整的签到日志和错误追踪
+- **容错机制** - 重试、熔断、限流、舱壁隔离
+- **插件架构** - 轻松扩展新平台
 
-## Supported Platforms
+## 支持的平台
 
-| Platform | Display Name | Status |
-|----------|-------------|--------|
-| bilibili | Bilibili | ✅ |
-| netease_music | NetEase Music | ✅ |
-| zhihu | Zhihu | ✅ |
-| juejin | Juejin | ✅ |
+| 平台 | 显示名 | 状态 |
+|------|--------|------|
+| bilibili | 哔哩哔哩 | ✅ |
+| netease_music | 网易云音乐 | ✅ |
+| zhihu | 知乎 | ✅ |
+| juejin | 掘金 | ✅ |
 | v2ex | V2EX | ✅ |
 
-## Quick Start
+## 快速开始
 
-### Docker Deployment (Recommended)
+### Docker 部署（推荐）
 
 ```bash
-# Clone repository
+# 克隆仓库
 git clone https://github.com/badhope/Auto-SignIn.git
 cd Auto-SignIn
 
-# Copy configuration file
+# 复制配置文件
 cp config.example.yml config.yml
 
-# Edit config.yml with your account information
+# 编辑配置文件，添加你的账号信息
 vim config.yml
 
-# Start services
+# 启动服务
 docker-compose up -d
 ```
 
-### Local Installation
+### 本地运行
 
 ```bash
-# Clone repository
+# 克隆仓库
 git clone https://github.com/badhope/Auto-SignIn.git
 cd Auto-SignIn
 
-# Create virtual environment
+# 创建虚拟环境
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
-# or: venv\Scripts\activate  # Windows
+# 或: venv\Scripts\activate  # Windows
 
-# Install dependencies
+# 安装依赖
 pip install -r requirements.txt
 
-# Run sign-in
+# 执行签到
 python main.py sign
 
-# Run scheduler
+# 启动调度器
 python main.py run
 ```
 
-## Project Structure
+## 项目结构
 
 ```
 Auto-SignIn/
-├── autosignin/              # Main package
+├── autosignin/              # 主包
 │   ├── __init__.py
 │   ├── __main__.py
-│   ├── cli.py               # Command-line interface
-│   ├── config/              # Configuration
+│   ├── cli.py               # 命令行界面
+│   ├── config/              # 配置模块
 │   │   ├── __init__.py
 │   │   ├── config.py        # ConfigManager
-│   │   └── models.py        # Pydantic models
-│   ├── core/                # Core modules
+│   │   └── models.py        # Pydantic 模型
+│   ├── core/                # 核心模块
 │   │   ├── __init__.py
 │   │   ├── engine.py        # SignInEngine
-│   │   ├── exceptions.py    # Exception classes
+│   │   ├── exceptions.py     # 异常类
 │   │   ├── notifier.py      # NotificationManager
 │   │   ├── scheduler.py     # TaskScheduler
 │   │   └── storage.py       # StorageAdapter
-│   ├── models/              # Data models
+│   ├── models/              # 数据模型
 │   │   ├── __init__.py
-│   │   ├── account.py       # Account models
-│   │   └── signin.py        # SignIn models
-│   ├── platforms/           # Platform plugins
+│   │   ├── account.py       # 账号模型
+│   │   └── signin.py        # 签到模型
+│   ├── platforms/           # 平台插件
 │   │   ├── __init__.py
 │   │   ├── base.py          # BasePlatform
 │   │   ├── manager.py       # PlatformManager
-│   │   ├── bilibili.py      # Bilibili plugin
-│   │   ├── netease.py       # NetEase Music plugin
-│   │   ├── zhihu.py         # Zhihu plugin
-│   │   ├── juejin.py        # Juejin plugin
-│   │   └── v2ex.py          # V2EX plugin
-│   ├── resilience/          # Resilience patterns
+│   │   ├── bilibili.py      # 哔哩哔哩插件
+│   │   ├── netease.py       # 网易云音乐插件
+│   │   ├── zhihu.py         # 知乎插件
+│   │   ├── juejin.py        # 掘金插件
+│   │   └── v2ex.py          # V2EX 插件
+│   ├── resilience/          # 容错模式
 │   │   ├── __init__.py
-│   │   ├── retry.py         # Retry with exponential backoff
-│   │   ├── circuit_breaker.py  # Circuit breaker
-│   │   ├── rate_limiter.py    # Rate limiter
-│   │   └── bulkhead.py        # Bulkhead isolation
-│   └── utils/               # Utilities
+│   │   ├── retry.py         # 指数退避重试
+│   │   ├── circuit_breaker.py  # 熔断器
+│   │   ├── rate_limiter.py    # 限流器
+│   │   └── bulkhead.py        # 舱壁隔离
+│   └── utils/               # 工具函数
 │       ├── __init__.py
-│       └── logging_config.py   # Logging configuration
-├── docs/                    # Documentation
-├── tests/                   # Tests
-├── main.py                  # Entry point
-├── config.example.yml        # Configuration example
-├── requirements.txt          # Python dependencies
+│       └── logging_config.py   # 日志配置
+├── docs/                    # 文档
+├── tests/                   # 测试
+├── main.py                  # 入口文件
+├── config.example.yml        # 配置示例
+├── requirements.txt          # Python 依赖
 ├── Dockerfile
 └── docker-compose.yml
 ```
 
-## CLI Usage
+## 命令行使用
 
 ```bash
-# Show help
+# 显示帮助
 python main.py --help
 
-# List all platforms
+# 列出所有平台
 python main.py list
 
-# Show system status
+# 显示系统状态
 python main.py status
 
-# Sign in to all platforms
+# 执行签到
 python main.py sign
 
-# Sign in to specific platforms
+# 指定平台签到
 python main.py sign -p bilibili zhihu
 
-# Sign in with specific config file
+# 使用指定配置文件
 python main.py -c config.yml sign
 
-# Start scheduler
+# 启动调度器
 python main.py run
 ```
 
-## Configuration
+## 配置说明
 
-Edit `config.yml`:
+编辑 `config.yml`:
 
 ```yaml
-# Schedule configuration
+# 定时任务配置
 schedule:
-  # Run at 9:00 AM daily
+  # 每天上午9点执行
   cron: "0 9 * * *"
   timezone: "Asia/Shanghai"
 
-# Notification configuration
+# 通知配置
 notifications:
   dingtalk:
     enabled: false
@@ -185,57 +185,57 @@ notifications:
     bot_token: "xxx"
     chat_id: "xxx"
 
-# Account configuration
+# 账号配置
 accounts:
   bilibili:
-    - name: "account1"
+    - name: "账号1"
       sessdata: "xxx"
       bili_jct: "xxx"
       buvid3: "xxx"
       enabled: true
 
   netease_music:
-    - name: "account1"
+    - name: "账号1"
       cookie: "xxx"
       enabled: true
 
   zhihu:
-    - name: "account1"
+    - name: "账号1"
       cookie: "xxx"
       enabled: true
 
   juejin:
-    - name: "account1"
+    - name: "账号1"
       cookie: "xxx"
       enabled: true
 
   v2ex:
-    - name: "account1"
+    - name: "账号1"
       cookie: "xxx"
       enabled: true
 ```
 
-## How to Get Cookies
+## 如何获取 Cookie
 
-### Bilibili
-1. Login to https://www.bilibili.com
-2. Press F12 → Application → Cookies
-3. Copy `SESSDATA`, `bili_jct`, `buvid3`
+### 哔哩哔哩
+1. 登录 https://www.bilibili.com
+2. 按 F12 → Application → Cookies
+3. 复制 `SESSDATA`、`bili_jct`、`buvid3`
 
-### NetEase Music
-1. Login to https://music.163.com
-2. Press F12 → Application → Cookies
-3. Copy the full cookie string
+### 网易云音乐
+1. 登录 https://music.163.com
+2. 按 F12 → Application → Cookies
+3. 复制完整的 Cookie 字符串
 
-### Other Platforms
-Similar steps - login and copy cookies from developer tools.
+### 其他平台
+类似步骤，登录后从开发者工具获取 Cookie。
 
-## Adding New Platforms
+## 添加新平台
 
-1. Create a new platform file in `autosignin/platforms/`
-2. Inherit from `BasePlatform`
-3. Use `@register_platform` decorator
-4. Implement `sign_in()` method
+1. 在 `autosignin/platforms/` 目录创建新的平台文件
+2. 继承 `BasePlatform`
+3. 使用 `@register_platform` 装饰器
+4. 实现 `sign_in()` 方法
 
 ```python
 from autosignin.platforms.base import BasePlatform, register_platform
@@ -243,14 +243,14 @@ from autosignin.models.signin import SignInResult
 
 @register_platform(
     name="example",
-    display_name="Example Platform",
+    display_name="示例平台",
     version="1.0.0",
     capabilities=["daily_sign"],
     required_fields=["cookie"]
 )
 class ExamplePlatform(BasePlatform):
     name = "example"
-    display_name = "Example Platform"
+    display_name = "示例平台"
     base_url = "https://api.example.com"
 
     async def sign_in(self, account_name: str, cookies: dict) -> SignInResult:
@@ -258,11 +258,11 @@ class ExamplePlatform(BasePlatform):
             platform=self.name,
             account=account_name
         )
-        # Implement sign-in logic
+        # 实现签到逻辑
         return result
 ```
 
-## Architecture
+## 架构设计
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -288,37 +288,37 @@ class ExamplePlatform(BasePlatform):
 └─────────────────────────────────────────────────┘
 ```
 
-## Testing
+## 测试
 
 ```bash
-# Run all tests
+# 运行所有测试
 pytest
 
-# Run specific platform tests
+# 运行特定平台测试
 pytest tests/test_bilibili.py
 
-# Run with coverage
+# 带覆盖率报告
 pytest --cov=autosignin --cov-report=html
 ```
 
-## Documentation
+## 文档
 
-See [docs/](docs/) for detailed documentation:
-- [Problems and Solutions](docs/problems_and_solutions.md)
-- [Next Steps](docs/next_steps.md)
+详细文档见 [docs/](docs/)：
+- [问题分析与解决方案](docs/problems_and_solutions.md)
+- [后续工作计划](docs/next_steps.md)
 
-## Changelog
+## 更新日志
 
-See [CHANGELOG.md](CHANGELOG.md) for version history.
+见 [CHANGELOG.md](CHANGELOG.md) 了解版本更新历史。
 
-## Contributing
+## 贡献指南
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+欢迎提交 Issue 和 PR！请阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 了解详情。
 
-## License
+## 许可证
 
 [MIT License](LICENSE)
 
-## Disclaimer
+## 免责声明
 
-This tool is for learning and communication purposes only. Please comply with the terms of service of each platform when using this tool.
+本工具仅供学习交流使用，请勿用于商业用途。使用本工具时请遵守相关平台的服务条款。
