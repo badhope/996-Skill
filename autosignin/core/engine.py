@@ -308,15 +308,61 @@ class SignInEngine:
         """清理已完成的任务"""
         now = asyncio.get_event_loop().time()
         to_remove = []
-        
+
         for task_id, task in self._tasks.items():
             if task.completed_at and (now - task.completed_at) > max_age_seconds:
                 to_remove.append(task_id)
-        
+
         for task_id in to_remove:
             del self._tasks[task_id]
-        
+
         return len(to_remove)
+
+    async def graceful_shutdown(self, timeout_seconds: int = 30):
+        """优雅关闭
+
+        Args:
+            timeout_seconds: 等待任务完成的最大超时时间
+
+        Returns:
+            bool: 是否成功关闭
+        """
+        logger.info(f"Starting graceful shutdown (timeout: {timeout_seconds}s)...")
+
+        running_tasks = [t for t in self._tasks.values() if t.status == TaskStatus.RUNNING]
+        if running_tasks:
+            logger.info(f"Waiting for {len(running_tasks)} running tasks to complete...")
+
+            try:
+                await asyncio.wait_for(
+                    asyncio.gather(*[self._wait_for_task(t.task_id) for t in running_tasks]),
+                    timeout=timeout_seconds
+                )
+                logger.info("All running tasks completed")
+            except asyncio.TimeoutError:
+                logger.warning(f"Shutdown timeout, {len(running_tasks)} tasks still running")
+                for task in running_tasks:
+                    task.status = TaskStatus.FAILED
+                    task.message = "Shutdown timeout"
+
+        if self.scheduler:
+            logger.info("Stopping scheduler...")
+            self.scheduler.shutdown(wait=True)
+
+        if self.storage:
+            logger.info("Closing storage...")
+            self.storage.close()
+
+        logger.info("Graceful shutdown completed")
+        return True
+
+    async def _wait_for_task(self, task_id: str, poll_interval: float = 0.5):
+        """等待任务完成"""
+        while True:
+            task = self._tasks.get(task_id)
+            if not task or task.status in (TaskStatus.SUCCESS, TaskStatus.FAILED, TaskStatus.PARTIAL_SUCCESS):
+                break
+            await asyncio.sleep(poll_interval)
 
 
 __all__ = ["SignInEngine"]

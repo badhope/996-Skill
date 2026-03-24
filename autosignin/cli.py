@@ -15,6 +15,7 @@ from autosignin.core.scheduler import TaskScheduler
 from autosignin.core.storage import SQLiteStorageAdapter
 from autosignin.platforms.manager import PlatformManager
 from autosignin.utils.logging_config import setup_logging, get_logger
+from autosignin.core.health import cmd_health_check, add_health_parser
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -78,7 +79,9 @@ def create_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="后台运行"
     )
-    
+
+    add_health_parser(subparsers)
+
     return parser
 
 
@@ -219,19 +222,16 @@ async def cmd_run(args) -> int:
     )
     
     scheduler.start()
-    
+
     logger.info(f"Scheduler started. Press Ctrl+C to stop.")
-    
+
     try:
         while True:
             await asyncio.sleep(60)
     except KeyboardInterrupt:
         logger.info("Shutting down...")
-        scheduler.shutdown()
-    
-    storage: SQLiteStorageAdapter = engine.storage
-    storage.close()
-    
+        await engine.graceful_shutdown(timeout_seconds=30)
+
     return 0
 
 
@@ -248,9 +248,10 @@ async def main() -> int:
         "sign": cmd_sign,
         "list": cmd_list,
         "status": cmd_status,
-        "run": cmd_run
+        "run": cmd_run,
+        "health": cmd_health_check
     }
-    
+
     if args.command in commands:
         return await commands[args.command](args)
     
