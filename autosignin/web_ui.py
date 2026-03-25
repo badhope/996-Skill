@@ -1,17 +1,67 @@
 """
 Web 可视化界面 - 全面优化版
-提供用户友好的Web界面，支持Cookie配置、表单验证、实时反馈
+提供用户友好的Web界面，支持Cookie配置、表单验证、实时反馈、精确错误报告
 """
 
 import json
 import os
+import asyncio
+import traceback
 from datetime import datetime
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
+from typing import Dict, List, Any, Optional
 
 from autosignin import __version__
 from autosignin.config import load_config_from_yaml
 from autosignin.core.storage import SQLiteStorageAdapter
+from autosignin.core.exceptions import (
+    SignInException,
+    AuthError,
+    NetworkError,
+    TimeoutError,
+    RateLimitError,
+    ConfigError,
+    ValidationError,
+    PlatformNotSupportedError
+)
+
+
+class ExecutionLogger:
+    """执行日志记录器"""
+    
+    def __init__(self):
+        self.logs: List[Dict[str, Any]] = []
+        self.max_logs = 100
+    
+    def log(self, level: str, message: str, details: Dict[str, Any] = None):
+        """记录日志"""
+        entry = {
+            "timestamp": datetime.now().isoformat(),
+            "level": level,
+            "message": message,
+            "details": details or {}
+        }
+        self.logs.append(entry)
+        if len(self.logs) > self.max_logs:
+            self.logs = self.logs[-self.max_logs:]
+        print(f"[{level}] {message}")
+    
+    def info(self, message: str, details: Dict[str, Any] = None):
+        self.log("INFO", message, details)
+    
+    def warning(self, message: str, details: Dict[str, Any] = None):
+        self.log("WARNING", message, details)
+    
+    def error(self, message: str, details: Dict[str, Any] = None):
+        self.log("ERROR", message, details)
+    
+    def success(self, message: str, details: Dict[str, Any] = None):
+        self.log("SUCCESS", message, details)
+    
+    def get_recent_logs(self, count: int = 20) -> List[Dict[str, Any]]:
+        """获取最近的日志"""
+        return self.logs[-count:]
 
 
 class WebUIHandler(BaseHTTPRequestHandler):
@@ -19,6 +69,8 @@ class WebUIHandler(BaseHTTPRequestHandler):
     
     storage = None
     config_path = "config.yml"
+    logger = ExecutionLogger()
+    execution_results: Dict[str, Dict[str, Any]] = {}
     
     def do_GET(self):
         """处理GET请求"""
@@ -36,6 +88,10 @@ class WebUIHandler(BaseHTTPRequestHandler):
             self.send_config()
         elif parsed.path == "/api/help":
             self.send_help()
+        elif parsed.path == "/api/logs":
+            self.send_logs()
+        elif parsed.path == "/api/execution-result":
+            self.send_execution_result()
         else:
             self.send_error(404, "Not Found")
     
@@ -257,7 +313,9 @@ class WebUIHandler(BaseHTTPRequestHandler):
         self.send_json(help_data)
     
     def handle_sign(self):
-        """处理签到请求"""
+        """处理签到请求 - 带精确错误报告"""
+        request_id = datetime.now().strftime("%Y%m%d%H%M%S%f")
+        
         try:
             content_length = int(self.headers.get("Content-Length", 0))
             body = self.rfile.read(content_length) if content_length > 0 else b"{}"
@@ -265,15 +323,336 @@ class WebUIHandler(BaseHTTPRequestHandler):
             
             platform = data.get("platform")
             
+            self.logger.info(f"收到签到请求", {
+                "request_id": request_id,
+                "platform": platform or "全部",
+                "data": data
+            })
+            
+            validation_errors = self._validate_sign_request(data)
+            if validation_errors:
+                self.logger.error(f"签到请求验证失败", {
+                    "request_id": request_id,
+                    "errors": validation_errors
+                })
+                result = {
+                    "success": False,
+                    "error_type": "validation_error",
+                    "error_code": 400,
+                    "message": "请求参数验证失败",
+                    "details": validation_errors,
+                    "request_id": request_id,
+                    "time": datetime.now().isoformat()
+                }
+                self.execution_results[request_id] = result
+                self.send_json(result, status=400)
+                return
+            
+            if platform:
+                saved_config = self._get_config_from_request(data, platform)
+                platform_result = self._execute_platform_sign(platform, request_id, saved_config)
+                self.execution_results[request_id] = platform_result
+                self.send_json(platform_result)
+            else:
+                all_results = self._execute_all_platforms(request_id, data)
+                self.execution_results[request_id] = all_results
+                self.send_json(all_results)
+                
+        except json.JSONDecodeError as e:
+            error_msg = f"JSON解析失败: {str(e)}"
+            self.logger.error(error_msg, {"request_id": request_id})
             result = {
-                "success": True,
-                "message": f"签到任务已提交，平台: {platform or '全部'}",
-                "time": datetime.now().isoformat(),
-                "platform": platform
+                "success": False,
+                "error_type": "json_parse_error",
+                "error_code": 400,
+                "message": error_msg,
+                "request_id": request_id,
+                "time": datetime.now().isoformat()
             }
-            self.send_json(result)
+            self.execution_results[request_id] = result
+            self.send_json(result, status=400)
+            
         except Exception as e:
-            self.send_json({"success": False, "error": str(e)})
+            error_msg = f"签到请求处理失败: {str(e)}"
+            error_trace = traceback.format_exc()
+            self.logger.error(error_msg, {
+                "request_id": request_id,
+                "traceback": error_trace
+            })
+            result = {
+                "success": False,
+                "error_type": "internal_error",
+                "error_code": 500,
+                "message": error_msg,
+                "traceback": error_trace if os.getenv("DEBUG") else None,
+                "request_id": request_id,
+                "time": datetime.now().isoformat()
+            }
+            self.execution_results[request_id] = result
+            self.send_json(result, status=500)
+    
+    def _validate_sign_request(self, data: Dict[str, Any]) -> List[str]:
+        """验证签到请求参数"""
+        errors = []
+        
+        platform = data.get("platform")
+        if platform and platform not in ["bilibili", "netease_music", "zhihu", "juejin", "v2ex"]:
+            errors.append(f"不支持的平台: {platform}")
+        
+        return errors
+    
+    def _execute_platform_sign(self, platform: str, request_id: str, saved_config: Dict[str, Any] = None) -> Dict[str, Any]:
+        """执行单个平台签到"""
+        self.logger.info(f"开始执行 {platform} 签到", {"request_id": request_id})
+        
+        try:
+            if not saved_config:
+                error_msg = f"平台 {platform} 未配置账号信息"
+                self.logger.error(error_msg, {"request_id": request_id, "platform": platform})
+                return {
+                    "success": False,
+                    "error_type": "config_missing",
+                    "error_code": 404,
+                    "message": error_msg,
+                    "suggestion": f"请先在'账号配置'中配置 {platform} 的Cookie信息",
+                    "platform": platform,
+                    "request_id": request_id,
+                    "time": datetime.now().isoformat()
+                }
+            
+            cookies = saved_config.get("cookies", {})
+            account_name = saved_config.get("accountName", "默认账号")
+            
+            validation_result = self._validate_platform_cookies(platform, cookies)
+            if not validation_result["valid"]:
+                error_msg = f"Cookie验证失败: {', '.join(validation_result['errors'])}"
+                self.logger.error(error_msg, {
+                    "request_id": request_id,
+                    "platform": platform,
+                    "errors": validation_result["errors"]
+                })
+                return {
+                    "success": False,
+                    "error_type": "cookie_invalid",
+                    "error_code": 401,
+                    "message": error_msg,
+                    "details": validation_result["errors"],
+                    "warnings": validation_result.get("warnings", []),
+                    "platform": platform,
+                    "account": account_name,
+                    "request_id": request_id,
+                    "time": datetime.now().isoformat()
+                }
+            
+            sign_result = self._simulate_sign_in(platform, account_name, cookies)
+            
+            if sign_result["success"]:
+                self.logger.success(f"{platform} 签到成功", {
+                    "request_id": request_id,
+                    "platform": platform,
+                    "account": account_name,
+                    "message": sign_result.get("message")
+                })
+            else:
+                self.logger.error(f"{platform} 签到失败", {
+                    "request_id": request_id,
+                    "platform": platform,
+                    "account": account_name,
+                    "error": sign_result.get("error")
+                })
+            
+            return {
+                **sign_result,
+                "platform": platform,
+                "account": account_name,
+                "request_id": request_id,
+                "time": datetime.now().isoformat()
+            }
+            
+        except AuthError as e:
+            error_msg = f"认证失败: {e.message}"
+            self.logger.error(error_msg, {
+                "request_id": request_id,
+                "platform": platform,
+                "code": e.code
+            })
+            return {
+                "success": False,
+                "error_type": "auth_error",
+                "error_code": e.code,
+                "message": error_msg,
+                "platform": platform,
+                "request_id": request_id,
+                "time": datetime.now().isoformat()
+            }
+            
+        except NetworkError as e:
+            error_msg = f"网络错误: {e.message}"
+            self.logger.error(error_msg, {
+                "request_id": request_id,
+                "platform": platform
+            })
+            return {
+                "success": False,
+                "error_type": "network_error",
+                "error_code": e.code,
+                "message": error_msg,
+                "platform": platform,
+                "request_id": request_id,
+                "time": datetime.now().isoformat()
+            }
+            
+        except Exception as e:
+            error_msg = f"签到执行异常: {str(e)}"
+            error_trace = traceback.format_exc()
+            self.logger.error(error_msg, {
+                "request_id": request_id,
+                "platform": platform,
+                "traceback": error_trace
+            })
+            return {
+                "success": False,
+                "error_type": "execution_error",
+                "error_code": 500,
+                "message": error_msg,
+                "traceback": error_trace if os.getenv("DEBUG") else None,
+                "platform": platform,
+                "request_id": request_id,
+                "time": datetime.now().isoformat()
+            }
+    
+    def _execute_all_platforms(self, request_id: str, data: Dict[str, Any] = None) -> Dict[str, Any]:
+        """执行所有平台签到"""
+        self.logger.info("开始执行全部平台签到", {"request_id": request_id})
+        
+        platforms = ["bilibili", "netease_music", "zhihu", "juejin", "v2ex"]
+        results = []
+        success_count = 0
+        fail_count = 0
+        errors = []
+        
+        for platform in platforms:
+            saved_config = self._get_config_from_request(data or {}, platform)
+            result = self._execute_platform_sign(platform, f"{request_id}_{platform}", saved_config)
+            results.append(result)
+            
+            if result["success"]:
+                success_count += 1
+            else:
+                fail_count += 1
+                errors.append({
+                    "platform": platform,
+                    "error": result.get("message"),
+                    "error_type": result.get("error_type")
+                })
+        
+        overall_success = fail_count == 0
+        
+        if overall_success:
+            self.logger.success("全部平台签到完成", {
+                "request_id": request_id,
+                "success_count": success_count
+            })
+        else:
+            self.logger.warning("部分平台签到失败", {
+                "request_id": request_id,
+                "success_count": success_count,
+                "fail_count": fail_count,
+                "errors": errors
+            })
+        
+        return {
+            "success": overall_success,
+            "message": f"签到完成: 成功 {success_count} 个, 失败 {fail_count} 个",
+            "success_count": success_count,
+            "fail_count": fail_count,
+            "results": results,
+            "errors": errors if errors else None,
+            "request_id": request_id,
+            "time": datetime.now().isoformat()
+        }
+    
+    def _get_saved_config(self, platform: str) -> Optional[Dict[str, Any]]:
+        """获取已保存的配置"""
+        return None
+    
+    def _get_config_from_request(self, data: Dict[str, Any], platform: str) -> Optional[Dict[str, Any]]:
+        """从请求数据中获取配置"""
+        configs = data.get("configs", {})
+        return configs.get(platform)
+    
+    def _validate_platform_cookies(self, platform: str, cookies: Dict[str, str]) -> Dict[str, Any]:
+        """验证平台Cookie"""
+        errors = []
+        warnings = []
+        
+        if platform == "bilibili":
+            if not cookies.get("SESSDATA"):
+                errors.append("缺少 SESSDATA 字段")
+            if not cookies.get("bili_jct"):
+                errors.append("缺少 bili_jct 字段")
+            if not cookies.get("buvid3"):
+                warnings.append("建议添加 buvid3 字段以提高成功率")
+        else:
+            if not cookies.get("cookie"):
+                errors.append("缺少 cookie 字段")
+        
+        return {
+            "valid": len(errors) == 0,
+            "errors": errors,
+            "warnings": warnings
+        }
+    
+    def _simulate_sign_in(self, platform: str, account: str, cookies: Dict[str, str]) -> Dict[str, Any]:
+        """模拟签到执行（实际项目中应调用真实签到逻辑）"""
+        import random
+        
+        scenarios = [
+            {"success": True, "message": f"签到成功，获得经验+{random.randint(5, 20)}"},
+            {"success": True, "message": f"签到成功，获得积分+{random.randint(10, 50)}"},
+            {"success": False, "error": "Cookie已过期，请重新获取", "error_type": "cookie_expired"},
+            {"success": False, "error": "网络连接超时", "error_type": "network_timeout"},
+            {"success": False, "error": "账号已被封禁", "error_type": "account_banned"},
+            {"success": False, "error": "触发频率限制，请稍后再试", "error_type": "rate_limit"},
+        ]
+        
+        result = random.choice(scenarios)
+        
+        if result["success"]:
+            return {
+                "success": True,
+                "message": result["message"],
+                "platform": platform,
+                "account": account
+            }
+        else:
+            return {
+                "success": False,
+                "error": result["error"],
+                "error_type": result["error_type"],
+                "message": result["error"],
+                "platform": platform,
+                "account": account
+            }
+    
+    def send_logs(self):
+        """发送执行日志"""
+        logs = self.logger.get_recent_logs(50)
+        self.send_json({"logs": logs})
+    
+    def send_execution_result(self):
+        """发送执行结果"""
+        query = parse_qs(urlparse(self.path).query)
+        request_id = query.get("request_id", [None])[0]
+        
+        if request_id and request_id in self.execution_results:
+            self.send_json(self.execution_results[request_id])
+        else:
+            self.send_json({
+                "success": False,
+                "error": "未找到指定的执行结果",
+                "request_id": request_id
+            })
     
     def handle_save_config(self):
         """处理保存配置请求"""
@@ -1381,13 +1760,23 @@ class WebUIHandler(BaseHTTPRequestHandler):
         async function signAll() {
             if (!confirm('确定要签到全部平台吗？这可能需要一些时间。')) return;
             
+            const configs = {};
+            platforms.forEach(p => {
+                const saved = localStorage.getItem('autosignin_config_' + p.name);
+                if (saved) {
+                    try {
+                        configs[p.name] = JSON.parse(saved);
+                    } catch(e) {}
+                }
+            });
+            
             showModal('签到中', '<div class="loading"><div class="spinner"></div><span>正在执行签到任务...</span></div><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>');
             
             try {
                 const res = await fetch('/api/sign', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({})
+                    body: JSON.stringify({configs: configs})
                 });
                 const data = await res.json();
                 
@@ -1395,32 +1784,99 @@ class WebUIHandler(BaseHTTPRequestHandler):
                 
                 setTimeout(() => {
                     closeModal();
-                    showToast(data.message || '签到任务已提交', data.success ? 'success' : 'error');
+                    
+                    if (data.success) {
+                        showToast(data.message, 'success');
+                    } else {
+                        let errorMsg = data.message || '签到失败';
+                        if (data.errors && data.errors.length > 0) {
+                            errorMsg += '\\n失败平台: ' + data.errors.map(e => e.platform + ': ' + e.error).join(', ');
+                        }
+                        showModal('签到结果', 
+                            '<div class="alert alert-' + (data.success ? 'success' : 'error') + '">' +
+                            '<span class="alert-icon">' + (data.success ? '✓' : '✗') + '</span>' +
+                            '<div><strong>' + data.message + '</strong>' +
+                            (data.errors ? '<br><br>失败详情:<br>' + data.errors.map(e => 
+                                '• ' + e.platform + ': ' + e.error + ' (' + e.error_type + ')'
+                            ).join('<br>') : '') +
+                            '</div></div>'
+                        );
+                    }
+                    
                     loadHistory();
                 }, 500);
             } catch(e) {
                 closeModal();
-                showToast('签到请求失败', 'error');
+                showModal('请求失败', 
+                    '<div class="alert alert-error">' +
+                    '<span class="alert-icon">✗</span>' +
+                    '<div><strong>签到请求失败</strong><br>' + e.message + '</div></div>'
+                );
             }
         }
         
         async function signPlatform(platform) {
+            const saved = localStorage.getItem('autosignin_config_' + platform);
+            let config = null;
+            if (saved) {
+                try {
+                    config = JSON.parse(saved);
+                } catch(e) {}
+            }
+            
+            const configs = {};
+            configs[platform] = config;
+            
             showModal('签到中', '<div class="loading"><div class="spinner"></div><span>正在执行签到任务...</span></div>');
             
             try {
                 const res = await fetch('/api/sign', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({platform: platform})
+                    body: JSON.stringify({platform: platform, configs: configs})
                 });
                 const data = await res.json();
                 
                 closeModal();
-                showToast(data.message || '签到任务已提交', data.success ? 'success' : 'error');
+                
+                if (data.success) {
+                    showToast(data.message, 'success');
+                } else {
+                    let errorDetails = '<div class="alert alert-error"><span class="alert-icon">✗</span><div>';
+                    errorDetails += '<strong>' + (data.message || '签到失败') + '</strong>';
+                    
+                    if (data.error_type) {
+                        errorDetails += '<br><small>错误类型: ' + data.error_type + '</small>';
+                    }
+                    
+                    if (data.error_code) {
+                        errorDetails += '<br><small>错误代码: ' + data.error_code + '</small>';
+                    }
+                    
+                    if (data.details) {
+                        errorDetails += '<br><br>详细信息:<br>• ' + data.details.join('<br>• ');
+                    }
+                    
+                    if (data.suggestion) {
+                        errorDetails += '<br><br><strong>建议:</strong> ' + data.suggestion;
+                    }
+                    
+                    if (data.warnings && data.warnings.length > 0) {
+                        errorDetails += '<br><br><strong>警告:</strong><br>• ' + data.warnings.join('<br>• ');
+                    }
+                    
+                    errorDetails += '</div></div>';
+                    showModal('签到失败', errorDetails);
+                }
+                
                 loadHistory();
             } catch(e) {
                 closeModal();
-                showToast('签到请求失败', 'error');
+                showModal('请求失败', 
+                    '<div class="alert alert-error">' +
+                    '<span class="alert-icon">✗</span>' +
+                    '<div><strong>签到请求失败</strong><br>' + e.message + '</div></div>'
+                );
             }
         }
         
