@@ -81,6 +81,19 @@ def create_parser() -> argparse.ArgumentParser:
     )
 
     add_health_parser(subparsers)
+    
+    web_parser = subparsers.add_parser("web", help="启动Web界面")
+    web_parser.add_argument(
+        "-p", "--port",
+        type=int,
+        default=8080,
+        help="Web服务端口 (默认: 8080)"
+    )
+    web_parser.add_argument(
+        "--host",
+        default="0.0.0.0",
+        help="绑定地址 (默认: 0.0.0.0)"
+    )
 
     return parser
 
@@ -202,6 +215,19 @@ async def cmd_status(args) -> int:
     return 0
 
 
+async def cmd_web(args) -> int:
+    """启动Web界面"""
+    from autosignin.web_ui import run_web_ui
+    
+    run_web_ui(
+        host=args.host,
+        port=args.port,
+        config_path=args.config
+    )
+    
+    return 0
+
+
 async def cmd_run(args) -> int:
     """运行调度器命令"""
     engine = await init_engine(args.config)
@@ -255,7 +281,8 @@ async def main() -> int:
         "list": cmd_list,
         "status": cmd_status,
         "run": cmd_run,
-        "health": cmd_health_check
+        "health": cmd_health_check,
+        "web": cmd_web
     }
 
     if args.command in commands:
