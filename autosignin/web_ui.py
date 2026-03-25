@@ -3,20 +3,18 @@ Web 可视化界面
 提供简单的Web界面方便用户操作
 """
 
-import asyncio
 import json
 import os
 from datetime import datetime
-from http.server import HTTPServer, SimpleHTTPRequestHandler
-from urllib.parse import parse_qs, urlparse
-import threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from urllib.parse import urlparse
 
 from autosignin import __version__
-from autosignin.config import ConfigManager, load_config_from_yaml
+from autosignin.config import load_config_from_yaml
 from autosignin.core.storage import SQLiteStorageAdapter
 
 
-class WebUIHandler(SimpleHTTPRequestHandler):
+class WebUIHandler(BaseHTTPRequestHandler):
     """Web界面请求处理器"""
     
     storage = None
@@ -67,7 +65,7 @@ class WebUIHandler(SimpleHTTPRequestHandler):
     
     def send_index(self):
         """发送主页"""
-        html = self.get_index_html()
+        html = self._get_index_html()
         self.send_html(html)
     
     def send_status(self):
@@ -112,7 +110,7 @@ class WebUIHandler(SimpleHTTPRequestHandler):
         try:
             config = load_config_from_yaml(self.config_path)
             accounts = {}
-            for platform, accs in config.accounts.dict().items():
+            for platform, accs in config.accounts.model_dump().items():
                 if accs:
                     accounts[platform] = [{"name": a.get("name", "")} for a in accs]
             self.send_json({"exists": True, "accounts": accounts})
@@ -122,8 +120,8 @@ class WebUIHandler(SimpleHTTPRequestHandler):
     def handle_sign(self):
         """处理签到请求"""
         content_length = int(self.headers.get("Content-Length", 0))
-        body = self.rfile.read(content_length)
-        data = json.loads(body) if body else {}
+        body = self.rfile.read(content_length) if content_length > 0 else b"{}"
+        data = json.loads(body)
         
         platform = data.get("platform")
         
@@ -137,8 +135,8 @@ class WebUIHandler(SimpleHTTPRequestHandler):
     def handle_save_config(self):
         """处理保存配置"""
         content_length = int(self.headers.get("Content-Length", 0))
-        body = self.rfile.read(content_length)
-        data = json.loads(body) if body else {}
+        body = self.rfile.read(content_length) if content_length > 0 else b"{}"
+        data = json.loads(body)
         
         result = {
             "success": True,
@@ -146,7 +144,7 @@ class WebUIHandler(SimpleHTTPRequestHandler):
         }
         self.send_json(result)
     
-    def get_index_html(self):
+    def _get_index_html(self):
         """获取主页HTML"""
         return '''<!DOCTYPE html>
 <html lang="zh-CN">
@@ -157,7 +155,7 @@ class WebUIHandler(SimpleHTTPRequestHandler):
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
@@ -188,8 +186,7 @@ class WebUIHandler(SimpleHTTPRequestHandler):
             padding: 24px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        .card h2 { color: #333; font-size: 18px; margin-bottom: 16px; display: flex; align-items: center; }
-        .card h2::before { content: ""; width: 4px; height: 20px; background: #667eea; border-radius: 2px; margin-right: 12px; }
+        .card h2 { color: #333; font-size: 18px; margin-bottom: 16px; border-left: 4px solid #667eea; padding-left: 12px; }
         .platform-list { list-style: none; }
         .platform-item {
             display: flex;
@@ -216,11 +213,10 @@ class WebUIHandler(SimpleHTTPRequestHandler):
             font-size: 14px;
             cursor: pointer;
             width: 100%;
-            margin-top: 16px;
+            margin-top: 12px;
             transition: transform 0.2s, box-shadow 0.2s;
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
-        .btn:active { transform: translateY(0); }
         .btn-secondary {
             background: white;
             color: #667eea;
@@ -235,24 +231,6 @@ class WebUIHandler(SimpleHTTPRequestHandler):
             font-size: 13px;
         }
         .history-item .time { color: #666; font-size: 12px; }
-        .history-item .status { float: right; }
-        .success { color: #2e7d32; }
-        .fail { color: #c62828; }
-        .config-form { margin-top: 16px; }
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; color: #333; font-weight: 500; margin-bottom: 8px; }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
-        }
         .alert {
             padding: 12px 16px;
             border-radius: 8px;
@@ -262,24 +240,15 @@ class WebUIHandler(SimpleHTTPRequestHandler):
         .alert-info { background: #e3f2fd; color: #1565c0; }
         .alert-success { background: #e8f5e9; color: #2e7d32; }
         .alert-warning { background: #fff3e0; color: #e65100; }
-        .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
-        .tab {
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            background: #f5f5f5;
-            color: #666;
-            border: none;
-        }
-        .tab.active { background: #667eea; color: white; }
         .loading { text-align: center; padding: 20px; color: #666; }
+        .success { color: #2e7d32; }
+        .fail { color: #c62828; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚀 Auto-SignIn 控制面板 <span class="version" id="version">v2.1.0</span></h1>
+            <h1>Auto-SignIn 控制面板 <span class="version" id="version">v2.1.0</span></h1>
             <p>多平台自动签到系统 - 支持哔哩哔哩、网易云音乐、知乎、掘金、V2EX</p>
         </div>
         
@@ -331,12 +300,9 @@ class WebUIHandler(SimpleHTTPRequestHandler):
             try {
                 const res = await fetch('/api/platforms');
                 const platforms = await res.json();
-                const html = platforms.map(p => `
-                    <li class="platform-item">
-                        <span class="platform-name">${p.display_name}</span>
-                        <span class="platform-status">✅ 就绪</span>
-                    </li>
-                `).join('');
+                const html = platforms.map(p => 
+                    '<li class="platform-item"><span class="platform-name">' + p.display_name + '</span><span class="platform-status">就绪</span></li>'
+                ).join('');
                 document.getElementById('platforms').innerHTML = html;
             } catch(e) {
                 document.getElementById('platforms').innerHTML = '<li class="loading">加载失败</li>';
@@ -349,9 +315,9 @@ class WebUIHandler(SimpleHTTPRequestHandler):
                 const data = await res.json();
                 const el = document.getElementById('config-status');
                 if (data.exists) {
-                    el.innerHTML = '<div class="alert alert-success">✅ 配置文件已存在</div>';
+                    el.innerHTML = '<div class="alert alert-success">配置文件已存在</div>';
                 } else {
-                    el.innerHTML = '<div class="alert alert-warning">⚠️ 请先复制 config.example.yml 为 config.yml 并配置账号</div>';
+                    el.innerHTML = '<div class="alert alert-warning">请先复制 config.example.yml 为 config.yml 并配置账号</div>';
                 }
             } catch(e) {
                 document.getElementById('config-status').innerHTML = '<div class="alert alert-warning">配置检查失败</div>';
@@ -363,13 +329,9 @@ class WebUIHandler(SimpleHTTPRequestHandler):
                 const res = await fetch('/api/history');
                 const records = await res.json();
                 if (Array.isArray(records) && records.length > 0) {
-                    const html = records.slice(0, 5).map(r => `
-                        <div class="history-item">
-                            <span class="status ${r.success ? 'success' : 'fail'}">${r.success ? '✅' : '❌'}</span>
-                            <strong>${r.platform}</strong> / ${r.account}
-                            <div class="time">${r.timestamp || ''}</div>
-                        </div>
-                    `).join('');
+                    const html = records.slice(0, 5).map(r => 
+                        '<div class="history-item"><span class="status ' + (r.success ? 'success' : 'fail') + '">' + (r.success ? 'OK' : 'X') + '</span> <strong>' + r.platform + '</strong> / ' + r.account + '<div class="time">' + (r.timestamp || '') + '</div></div>'
+                    ).join('');
                     document.getElementById('history').innerHTML = html;
                 } else {
                     document.getElementById('history').innerHTML = '<div class="loading">暂无签到记录</div>';
@@ -379,12 +341,12 @@ class WebUIHandler(SimpleHTTPRequestHandler):
             }
         }
         
-        async function signAll() {
+        function signAll() {
             if (!confirm('确定要签到全部平台吗？')) return;
             alert('签到任务已提交！请查看日志了解详情。');
         }
         
-        async function signPlatform(platform) {
+        function signPlatform(platform) {
             alert(platform + ' 签到任务已提交！');
         }
         
@@ -413,16 +375,16 @@ def run_web_ui(host="0.0.0.0", port=8080, config_path="config.yml"):
     server = HTTPServer((host, port), WebUIHandler)
     
     print(f"""
-╔══════════════════════════════════════════════════════════╗
-║           Auto-SignIn Web 控制面板已启动                  ║
-╠══════════════════════════════════════════════════════════╣
-║                                                          ║
-║   🌐 访问地址: http://localhost:{port}                     ║
-║   📁 配置文件: {config_path:<40} ║
-║                                                          ║
-║   按 Ctrl+C 停止服务                                     ║
-║                                                          ║
-╚══════════════════════════════════════════════════════════╝
+========================================
+   Auto-SignIn Web 控制面板已启动
+========================================
+   
+   访问地址: http://localhost:{port}
+   配置文件: {config_path}
+   
+   按 Ctrl+C 停止服务
+   
+========================================
 """)
     
     try:
