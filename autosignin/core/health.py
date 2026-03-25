@@ -47,7 +47,7 @@ class CookieHealthChecker:
     ) -> List[Dict]:
         """检查单个平台的 Cookie 健康状态"""
         results = []
-        platform = self.platform_manager.get_platform(platform_name)
+        platform = await self.platform_manager.get_platform(platform_name)
 
         if not platform:
             return results
