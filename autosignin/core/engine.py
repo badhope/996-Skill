@@ -8,6 +8,7 @@ import logging
 import time
 import uuid
 from typing import Dict, List, Optional, Any
+from datetime import datetime
 
 from autosignin.core.exceptions import (
     SignInException,
@@ -175,7 +176,7 @@ class SignInEngine:
         finally:
             result.duration_ms = int((time.time() - start_time) * 1000)
             result.retry_count = retry_count
-            result.timestamp = asyncio.get_event_loop().time
+            result.timestamp = datetime.now()
             
             record = SignInRecord(
                 request_id=request_id,
@@ -203,7 +204,7 @@ class SignInEngine:
             task_id=task_id,
             request=request,
             status=TaskStatus.RUNNING,
-            started_at=asyncio.get_event_loop().time
+            started_at=datetime.now()
         )
         
         self._tasks[task_id] = task
@@ -261,7 +262,7 @@ class SignInEngine:
             task.status = TaskStatus.FAILED
         
         finally:
-            task.completed_at = asyncio.get_event_loop().time
+            task.completed_at = datetime.now()
         
         return task
     

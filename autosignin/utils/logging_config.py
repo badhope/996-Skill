@@ -26,14 +26,6 @@ def setup_logging(
         backup_count: 保留的备份文件数量
         format_string: 自定义格式字符串
     """
-    if format_string is None:
-        format_string = (
-            "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "
-            "<level>{level: <8}</level> | "
-            "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> | "
-            "<level>{message}</level>"
-        )
-    
     logger = logging.getLogger("autosignin")
     logger.setLevel(getattr(logging, level.upper(), logging.INFO))
     

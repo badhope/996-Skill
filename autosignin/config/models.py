@@ -107,8 +107,7 @@ class Config(BaseModel):
     notifications: NotificationConfig = Field(default_factory=NotificationConfig)
     accounts: AccountsConfig = Field(default_factory=AccountsConfig)
     
-    class Config:
-        extra = "allow"
+    model_config = {"extra": "allow"}
 
 
 def load_config_from_yaml(config_path: str) -> Config:

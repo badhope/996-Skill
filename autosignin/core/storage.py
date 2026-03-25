@@ -126,7 +126,7 @@ class SQLiteStorageAdapter(StorageAdapter):
         if row['metadata']:
             try:
                 metadata = json.loads(row['metadata'])
-            except:
+            except (json.JSONDecodeError, TypeError):
                 metadata = {}
         
         return SignInRecord(
