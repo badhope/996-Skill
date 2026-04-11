@@ -18,7 +18,7 @@
 
 ---
 
-**🌍 English | [中文](README.md)**
+**🌍 [English](README_EN.md) | [中文](README.md)**
 
 > **World's first multi-agent competitive production system. Simulates a complete 8-person tech company, delivering production-grade code quality through involution mechanisms.**
 
