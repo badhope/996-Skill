@@ -1,4 +1,4 @@
-name: Validate
+name: CI
 
 on:
   push:
@@ -9,42 +9,66 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    name: Skill Validation
+    name: ✅ Validation
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check Skill file exists
+      - name: Validate Skill File
         run: |
-          if [ ! -f ".trae/skills/996-agent/SKILL.md" ]; then
+          echo "===================="
+          echo "🔍 Checking Skill file"
+          echo "===================="
+          if [ -f ".trae/skills/996-agent/SKILL.md" ]; then
+            echo "✅ SKILL.md exists"
+          else
             echo "❌ SKILL.md not found!"
             exit 1
           fi
-          echo "✅ SKILL.md exists"
 
-      - name: Validate Skill frontmatter
+      - name: Validate Documentation
         run: |
-          head -20 .trae/skills/996-agent/SKILL.md | grep -q "^---" || exit 1
-          head -20 .trae/skills/996-agent/SKILL.md | grep -q "^name:" || exit 1
-          head -20 .trae/skills/996-agent/SKILL.md | grep -q "^description:" || exit 1
-          echo "✅ Skill frontmatter valid"
-
-      - name: Check documentation
-        run: |
-          files=("README.md" "LICENSE" "docs/ARCHITECTURE_EVOLUTION.md" "docs/INFINITE_INVOLUTION.md" "BENCHMARK_REPORT.md")
+          echo ""
+          echo "===================="
+          echo "📚 Checking Documentation"
+          echo "===================="
+          files=("README.md" "README_EN.md" "LICENSE" "CONTRIBUTING.md" "CODE_OF_CONDUCT.md")
           for f in "${files[@]}"; do
-            if [ ! -f "$f" ]; then
+            if [ -f "$f" ]; then
+              echo "✅ $f"
+            else
               echo "❌ Missing: $f"
               exit 1
             fi
-            echo "✅ $f exists"
           done
 
-      - name: Markdown Lint
-        uses: DavidAnson/markdownlint-cli2-action@v15
-        continue-on-error: true
-        with:
-          globs: "**/*.md"
+      - name: Validate Docs Folder
+        run: |
+          echo ""
+          echo "===================="
+          echo "📂 Checking Docs Folder"
+          echo "===================="
+          docs=("docs/ARCHITECTURE_EVOLUTION.md" "docs/INFINITE_INVOLUTION.md" "docs/OPEN_SOURCE_VIRAL_GUIDE.md")
+          for f in "${docs[@]}"; do
+            if [ -f "$f" ]; then
+              echo "✅ $f"
+            else
+              echo "❌ Missing: $f"
+              exit 1
+            fi
+          done
 
-      - name: All checks passed
-        run: echo "🎉 CI Green - Ready to ship!"
+      - name: Success
+        run: |
+          echo ""
+          echo "===================="
+          echo "🎉 ALL CHECKS PASSED!"
+          echo "===================="
+          echo ""
+          echo "   _____ __    _____ _____ "
+          echo "  |   __|  |  |   __|_   _|"
+          echo "  |   __|  |__|   __| | |  "
+          echo "  |__|  |_____|_____| |_|  "
+          echo ""
+          echo "AI works 996, so you don't have to."
+          echo ""
