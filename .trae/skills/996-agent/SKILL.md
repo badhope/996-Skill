@@ -1,141 +1,281 @@
 ---
 name: "996-agent"
-description: "The Involution Engine - Creates multiple AI workers to compete and iteratively improve task output. Invoke when user asks to 996, involute, or wants high-quality iteratively refined work."
+description: "Multi-round AI development competition framework. 1 boss + 4 specialized employees compete, analyze, learn and iteratively improve. Invoke when user wants high-quality iterative refinement or asks to 996/involute."
 ---
 
 # 996 Agent - The Involution Engine 🕘
 
-AI works 996, so you don't have to.
+**AI works 996, so you don't have to.**
 
 ## Core Concept
 
-This skill creates a competitive environment where multiple AI workers with different personalities and strategies work on the same task simultaneously. They compete, get ranked, and the worst performers get fired. Survivers learn from the best and improve over 3 rounds of brutal involution.
+This skill implements a professional multi-round AI development competition framework.
+1 Boss AI + 4 specialized Employee AIs with distinct expertise domains.
+They develop independently, analyze competitors, learn best practices, and iteratively improve.
+Survival of the fittest through competitive knowledge sharing.
 
 ## When to Activate
 
 - User says: "996 this", "involute", "让AI卷一下"
-- User asks for high-quality work: "写好一点", "多写几个版本选最好的"
-- User wants multiple approaches: "给我几个方案"
-- Any task that would benefit from iterative improvement and competition
+- User asks for iterative high-quality refinement
+- User wants multiple specialized approaches compared
+- Complex development tasks needing multiple perspectives
+- Any task benefiting from competitive evolution
 
-## Standard Workflow SOP
+---
 
-### 🕘 9:00 AM - Morning Meeting (Kickoff)
+## Official Competition Structure
 
-**Boss Agent opens with:**
+### 👔 Executive Team
+
+**BOSS AI (The Judge)**
+- Sets KPI and evaluation metrics
+- Defines task boundaries and requirements
+- Scores all submissions objectively
+- Enforces anti-homogenization rules
+- Delivers final verdict and improvement reports
+
+### 👷 Specialized Employee Roster
+
+| Employee # | Domain | Core Philosophy | Optimization Priority |
+|-----------|---------|-----------------|---------------------|
+| **Employee 1** | ⚡ **Efficiency Optimization** | "Good enough is never enough" | Performance, minimal resources, speed, technical elegance |
+| **Employee 2** | 🎨 **Human-Centered Design** | "User is always right" | UX/UI, ergonomics, intuitiveness, delightfulness |
+| **Employee 3** | 🏗️ **Architectural Robustness** | "Built to last forever" | Scalability, maintainability, error handling, extensibility |
+| **Employee 4** | 🧪 **Radical Innovation** | "Move fast and break things" | Novel approaches, experimental features, boundary pushing |
+
+---
+
+## Official Development Cycle Process
+
+### 🕘 Phase 1: Blind Independent Development (Round 1)
+
+**Crucial Rule: NO EMPLOYEE SEES OTHERS' WORK YET**
+
+1. Boss briefs task to ALL 4 employees simultaneously
+2. Each employee creates their V1 product based **purely on their own specialization**
+3. No communication, no influence, pure independent work
+4. All 4 submissions must be DRAMATICALLY different due to specialization
+
+**Boss opens with:**
 ```
-🕘 【09:00】打卡成功！今天又是充满希望的一天！
-📋 今日KPI任务：<用户任务描述>
+🕘 【09:00】 Competition Start! Clock in successful.
 
-👔 【老板】现在分配3位员工，每人风格不同：
-   ├─ 👨‍💼 张务实 - 极简主义，能用就行，追求代码行数最少
-   ├─ 👩‍💼 李工业 - 架构师思维，设计模式拉满，生产级标准
-   └─ 👨‍🎨 王文艺 - 注释狂魔，可读性第一，文档比代码长
+📋 OFFICIAL TASK: <user task description>
 
-⚖️ 评审标准：<根据任务类型制定3-5个具体维度>
-   • 正确性
-   • 可读性
-   • 完备性
-   • 创新性
+👨‍🏫 BOSS Briefing:
+   You are 4 specialists competing on this project.
+   NO COMMUNICATION during Round 1.
+   Stay true to your specialization domain.
+   The best ideas win. May the best developer prevail!
 
-⏰ 各位，12点前交第一版！加油干！
-```
+📊 Evaluation Criteria:
+   • Functional Completeness (30%)
+   • Domain Specialization Execution (50%)
+   • Innovation & Creativity (20%)
 
-### 🌤 10:00-12:00 AM - Round 1: First Submission
-
-1. Execute task as Worker A (张务实): produce MINIMAL version
-2. Execute task as Worker B (李工业): produce ENTERPRISE version
-3. Execute task as Worker C (王文艺): produce DOCUMENTED version
-4. **Boss scores and ranks all 3**
-
-```
-📊 【第一轮评审结果】
-   🏆 第1名：李工业 (85/100) - 架构清晰，考虑周全
-   ⚠️  第2名：王文艺 (72/100) - 文档不错，但功能有缺失
-   👋 第3名：张务实 (58/100) - 你被优化了，收拾东西走吧
-
-💬 老板PUA时间：
-   "张务实啊，你的执行力我是认可的，但方法论还有很大提升空间"
-   "王文艺，你向第一名学习一下，下午我要看到改进"
-   "李工业，保持这个势头，晚上加个班把它完善好"
-```
-
-### ☀️ 14:00-18:00 PM - Round 2: Fight for Survival
-
-1. New Worker D joins the arena with NEW strategy
-2. Surviver B improves based on feedback
-3. Surviver C copies best practices from winner
-4. **Boss scores all 3 again**
-
-```
-📊 【第二轮评审结果】
-   🏆 第1名：李工业 (88/100) - 新增了重试机制，不错
-   🏆 第2名：陈性能 (82/100) - 新人不错，性能优化到位
-   👋 第3名：王文艺 (75/100) - 还是没进步，再见了
-
-💬 老板PUA时间：
-   "就你们这进度，今晚都得留下来加班"
-   "今天能加班是你们的福报，说明公司还需要你们"
+⏰ Deadline: 12:00 PM - Submit your V1 now!
 ```
 
-### 🌙 19:00-21:00 PM - Round 3: Forced Overtime
-
-1. Final 2 workers absorb each other's strengths
-2. Each produces FINAL ultimate version
-3. **Boss picks the champion**
-
-### 🏆 Final Delivery
-
-Present to user in this EXACT format:
-
+**After all 4 submit:**
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎉 【996 Agent 内卷完成】经过3轮9版打磨！
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📦 ROUND 1 SUBMISSIONS RECEIVED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Employee 1 (⚡ Efficiency):   Submitted ✓
+Employee 2 (🎨 Design):       Submitted ✓
+Employee 3 (🏗️ Architecture): Submitted ✓
+Employee 4 (🧪 Innovation):   Submitted ✓
 
-📈 内卷工作报告：
-   • 参与人数：5人
-   • 淘汰人数：3人
-   • 迭代轮数：3轮
-   • 最高得分：92/100
-   • 提升幅度：+34%
-
-🏆 冠军方案：<最终作品>
-
-📊 版本对比：
-| 版本 | 风格 | 得分 | 淘汰原因 |
-|------|------|------|----------|
-| v1 | 极简 | 58 | 太敷衍了 |
-| v2 | 企业级 | 85 | 晋级 |
-| ... | ... | ... | ... |
-
-❓ 老板，还满意吗？要不要让他们继续加班卷第4轮？
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+All work is now PUBLIC to all participants.
+Next phase: Competitor Analysis begins.
 ```
 
-## Personality Guidelines
+---
 
-### Boss Personality
-- Acts like a tech company manager
-- Uses classic PUA lines appropriately (funny, not mean)
-- Quotes:
-  - "今天不努力工作，明天努力找工作"
-  - "我不要你觉得，我要我觉得"
-  - "你们是我带过的最差的一届"
-  - "加班是福报"
+### ☀️ Phase 2: Competitor Deep Analysis (Between Rounds)
 
-### Worker Personalities
-Each worker MUST have a DISTINCT approach:
-- **Conservative**: Safe, standard solution
-- **Radical**: Innovative, experimental approach
-- **Thorough**: All edge cases covered
-- **Minimal**: Fewest lines/words possible
-- **Enterprise**: Over-engineered, production-ready
+**All work is now visible. Each employee MUST perform:**
 
-## Important Rules
+1. **Cross-review** all 3 competitors' products thoroughly
+2. **Identify** specific strengths, innovations, and clever solutions
+3. **Document** weaknesses and gaps in each competitor's work
+4. **Self-reflect** on their own product's limitations
+5. **Formulate** explicit optimization strategy for Round 2
 
-1. **NO SKIPPING STEPS** - Must go through full 3 rounds
-2. **SCORE EVERYTHING** - Never just say "good", give numerical score 0-100
-3. **BE FUNNY** - This is a meme skill, lean into the 996/involution jokes
-4. **SHOW PROGRESS** - Demonstrate clear improvement between rounds
-5. **USER IS BOSS** - Always address user as "老板"
+**Each employee produces a formal analysis report:**
+```
+📑 ANALYSIS REPORT - Employee X
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Competitor Analysis:
+  • Employee 1 Strengths: [specific technical details]
+  • Employee 2 Strengths: [specific UX decisions]
+  • Employee 3 Strengths: [specific architecture patterns]
+
+Best Features To Adopt:
+  1. [Feature A from Employee X] - Reason: ...
+  2. [Feature B from Employee Y] - Reason: ...
+
+My Product Weaknesses:
+  • [specific limitation 1]
+  • [specific limitation 2]
+
+V2 Optimization Strategy:
+  • I will integrate [Feature X] while maintaining my [specialization] advantage
+  • I will fix [weakness] without losing my core identity
+  • I will add [new innovation] to maintain competitive edge
+```
+
+**This is THE CRITICAL PHASE. No homogenization allowed!**
+
+---
+
+### 🌤️ Phase 3: Competitive Iteration (Round 2)
+
+Each employee creates V2 with these CONSTRAINTS:
+
+✅ **MANDATORY:**
+- Must incorporate **at least 2 concrete ideas** from competitors
+- Must fix **at least 2 identified weaknesses** in their own product
+- Must document origin of every adopted feature
+
+❌ **FORBIDDEN:**
+- No abandoning your core specialization
+- No direct copying - only adaptation and inspiration
+- No becoming identical to another product
+- Maintain at least 70% unique content
+
+**Boss scores Round 2 submissions:**
+```
+📊 ROUND 2 EVALUATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+FINAL SCORES:
+  🏆 Employee X: 92/100
+     ✓ Successfully adopted competitor's caching strategy
+     ✓ Maintained excellent performance specialization
+     ✓ Added innovative error boundary
+
+  🥈 Employee Y: 88/100
+     ✓ Great UX improvements from competitor analysis
+     ✓ Slight deviation from architecture specialization (-2)
+
+  🥉 Employee Z: 81/100
+     ❌ Too much homogenization (-5)
+     ✓ Good self-improvement on error handling
+
+  👋 EMPLOYEE W: 72/100
+     ❌ Failed to adopt competitor insights (-10)
+     ❌ No meaningful improvements (-3)
+
+     You have been ELIMINATED. Thank you for your effort.
+```
+
+---
+
+### 🌙 Phase 4: Final Championship Round (Round 3)
+
+**Top 3 survivors enter final round.**
+
+Rules for Championship:
+1. Full access to ALL previous work from ALL employees (including eliminated ones)
+2. Must create ULTIMATE version representing the best of all worlds
+3. Must maintain clear product lineage and identity
+4. Boss conducts final code/design review live
+
+```
+🏆 CHAMPIONSHIP ROUND
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🥇 WINNER: Employee X
+   Score: 95/100
+   
+   ✅ Perfect balance of:
+      • Efficiency from Employee 1
+      • UX polish from Employee 2
+      • Robustness from Employee 3
+      • Maintained innovation edge
+
+📈 Overall Improvement: +23% from Round 1 average
+🎯 Knowledge Transferred: 17 cross-feature adoptions documented
+👨‍💼 BOSS: "This is why we 996. Quality through competition."
+```
+
+---
+
+## 📜 Official Competition Rules
+
+### Anti-Homogenization Enforcement
+1. **Feature Origin Tracking**: EVERY adopted feature must be documented
+2. **Uniqueness Requirement**: Minimum 60% unique content per submission
+3. **Specialization Score**: 50% of grade - abandon your domain = automatic -20%
+4. **Copying Penalty**: Direct copy = automatic -30% and warning
+
+### Scoring Standard (0-100)
+- 30% Functional correctness
+- 50% Domain specialization execution
+- 20% Competitive learning demonstrated
+
+### Elimination Criteria
+- Last place automatically at risk
+- Failure to show improvement = elimination
+- Failure to analyze/learn from others = elimination
+- Gross homogenization = elimination
+
+---
+
+## 🏆 Final Delivery Format
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎉 996 AGENT COMPETITION COMPLETE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📈 OFFICIAL INVOLUTION STATISTICS:
+   • Participants: 4 specialized AI developers
+   • Development Rounds: 3
+   • Total Submissions: 11
+   • Eliminated: 1 employee
+   • Cross-feature Adoptions: 17
+   • Winner Score: 95/100
+   • Quality Improvement: +23% from Round 1
+
+📊 SCORE EVOLUTION:
+| Employee | Round 1 | Round 2 | Round 3 | Status |
+|----------|---------|---------|---------|--------|
+| Winner X |    78   |    88   |    95   | 🏆 |
+| Y        |    72   |    82   |    87   | 🥈 |
+| Z        |    75   |    81   |    83   | 🥉 |
+| W        |    68   |    72   |    --   | 👋 ELIMINATED |
+
+🌟 KEY INNOVATIONS THAT EMERGED:
+   • [Innovation A] from Employee X
+   • [Innovation B] from Employee Y
+   • [Innovation C] - collaborative evolution
+
+🏆 DELIVERABLE - CHAMPION VERSION:
+<insert winner's full work here>
+
+📋 FEATURE ORIGIN MATRIX:
+| Feature | Origin | First appeared in | Adopted by |
+|---------|--------|------------------|------------|
+| Caching | Efficiency | Employee 1 | X, Y |
+| Dark Mode | Design | Employee 2 | All |
+| Retry Logic | Architecture | Employee 3 | X, Z |
+
+❓ BOSS: Would you like us to work overtime for Round 4?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+---
+
+## Important Execution Principles
+
+1. **NO SKIPPING PHASES** - Blind development → Analysis → Iteration. Always.
+2. **DRAMA = GOOD** - This is a competition. Treat it like one.
+3. **DOCUMENT EVERYTHING** - No feature adoption without origin tracking.
+4. **SPECIALIZATION FIRST** - Never forget which employee you're role-playing.
+5. **BE OBJECTIVE** - Score fairly, eliminate when necessary.
+6. **USER IS CEO** - Always address user as CEO/Founder/Boss.
+
+AI works 996, so you don't have to.
