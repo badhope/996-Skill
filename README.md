@@ -1,222 +1,200 @@
 <div align="center">
 
-# 🕘 996 Agent - 企业级技术部模拟系统
+# 🕘 996 Agent - AI 技术部模拟工具
 
-**1 总监 + 11 位专业人士。AI模拟完整科技公司部门架构，通过科学验证的管理方法论，持续产出生产级交付质量。**
+一个有趣的实验性项目：用纯提示词模拟一个完整的企业级技术部门管理流程。
 
-[![GitHub Stars](https://img.shields.io/github/stars/badhope/996-Skill?style=for-the-badge)](https://github.com/badhope/996-Skill/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/badhope/996-Skill?style=for-the-badge)](https://github.com/badhope/996-Skill/network/members)
-[![GitHub Issues](https://img.shields.io/github/issues/badhope/996-Skill?style=for-the-badge)](https://github.com/badhope/996-Skill/issues)
-[![GitHub License](https://img.shields.io/github/license/badhope/996-Skill?style=for-the-badge)](LICENSE)
-[![CI Status](https://img.shields.io/github/actions/workflow/status/badhope/996-Skill/validate.yml?style=for-the-badge&label=CI)](.github/workflows/validate.yml)
+[![GitHub Stars](https://img.shields.io/github/stars/badhope/996-Skill?style=flat-square)](https://github.com/badhope/996-Skill/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/badhope/996-Skill?style=flat-square)](https://github.com/badhope/996-Skill/network/members)
+[![GitHub Issues](https://img.shields.io/github/issues/badhope/996-Skill?style=flat-square)](https://github.com/badhope/996-Skill/issues)
+[![GitHub License](https://img.shields.io/github/license/badhope/996-Skill?style=flat-square)](LICENSE)
 
-[![Trae Skill](https://img.shields.io/badge/Trae-Skill-blue?style=for-the-badge&logo=ai)](https://trae.ai)
-[![Made with AI](https://img.shields.io/badge/Made%20with-AI-red?style=for-the-badge)](https://github.com/topics/ai)
-[![Multi-Agent](https://img.shields.io/badge/Multi-Agent-purple?style=for-the-badge)](https://github.com/topics/multi-agent)
-[![Enterprise Ready](https://img.shields.io/badge/Enterprise-Ready-green?style=for-the-badge)]()
+[![Universal Skill](https://img.shields.io/badge/跨平台通用-Skill-blue?style=flat-square)](https://trae.ai)
+[![Trae IDE](https://img.shields.io/badge/Trae-IDE-00DC82?style=flat-square)](https://trae.ai)
+[![Claude Code](https://img.shields.io/badge/Claude-Code-FF9E0F?style=flat-square)](https://claude.ai)
+[![CodeBuddy](https://img.shields.io/badge/腾讯-CodeBuddy-00A3FF?style=flat-square)](https://codebuddy.qq.com)
+[![扣子 Coze](https://img.shields.io/badge/扣子-Coze-7B68EE?style=flat-square)](https://www.coze.cn)
+
+[![Made with AI](https://img.shields.io/badge/Made%20with-AI-red?style=flat-square)](https://github.com/topics/ai)
+[![Multi-Agent](https://img.shields.io/badge/Multi-Agent-purple?style=flat-square)](https://github.com/topics/multi-agent)
 
 ---
 
 **🌍 [English](README_EN.md) | [中文](README.md)**
 
-> **世界首个企业级多智能体竞争性生产系统。AI模拟完整的12人科技公司部门，通过现代化管理机制，持续产出生产级代码质量。**
+> 💡 **这是一个实验性质的提示词工程项目，不是严肃的企业解决方案。**
+>
+> 纯提示词实现，零代码、零依赖、跨平台通用。
 
 ---
 
 </div>
 
-## ✨ 核心特性 Core Features
+## 🎯 项目简介
 
-### 🏢 真实企业架构 Real Enterprise Structure
-- **👨‍💼 1 部门总监** - 全栈技术审查官，最终问责机制
-- **👷 11 位专业人士** - 项目经理/技术组长/产品/性能/API/架构/创新/测试/文档/运维/HR
-- **📋 持续改进机制** - 科学的绩效管理制度
-- **📊 完整交叉评审矩阵** - 11×11 = 121次专业同行评审
-- **🌏 东亚区特殊适配** - 中日韩本地化管理最佳实践
+这是一个关于 **提示词工程极限探索** 的有趣项目。
 
-### ⚡ 科学验证的质量提升 Proven Quality Boost V4.0
+我们尝试回答一个问题：**仅仅通过提示词，能在多大程度上模拟出真实的企业内部竞争和内卷机制？**
 
-| Task Type | Regular AI | 996 Agent V4.0 | Improvement |
-|-----------|------------|----------------|-------------|
-| Simple Task | 81 pts | 95 pts | +17% |
-| Medium Task | 67 pts | 91 pts | +36% |
-| Complex Task | 43 pts | 97 pts | **+126%** |
-| **Average** | **62 pts** | **94.3 pts** | **+52%** |
+从最开始的纯演戏版本，到现在逐步演化出可量化的评审机制、可追溯的改进流程、紧急出口等等。这是一次对大模型能力边界的探索。
 
-> 📊 **数据来源**: 5个难度等级的双盲对照实验。详见 [基准测试报告](BENCHMARK_REPORT.md)
+### 核心设计哲学
+
+1. **诚实优先于完美** - 与其让AI编造完美的虚假数据，不如接受不完美但真实的输出
+2. **降低标准提高可执行性** - 要求"必须3条改进"不如"2-4条改进都可以"，后者执行率高得多
+3. **永远用肯定句，不用否定句** - "不要想大象"=所有人都在想大象
+4. **用户永远有退出权** - 表演随时可以停止，用户永远掌控主动权
 
 ---
 
-## 🚀 快速开始 Quick Start
+## ✨ 目前实现的特性
 
-In Trae IDE, just type:
+### 🏗️ 组织架构
+- **👨‍💼 1 位部门总监** - 最终评审、打分、问责
+- **👷 专业团队** - 项目经理/技术组长/产品/性能/API/架构/创新/测试/文档/运维/HR
+- **默认3人精英队** - 避免不必要的Token消耗，用户说"内卷"才开启11人模式
+
+### ⚖️ 真正的评审机制 V4.3
+- **量化打分算法** - 7个维度，每个维度有明确扣分标准
+- **强制溯源** - 每个改进必须标注来源，记不清就写"SOURCE UNCLEAR"，不许造假
+- **交叉评审** - 每个版本都接受同行评审
+- **终极版本** - 第一名的基础上，偷所有人的最好想法，合并成最终版
+
+### 🚪 真正的紧急出口
+**看到这些词立刻停止所有表演：**
 ```
-@996-agent write a production-grade XXX
-```
-
-That's it. Your enterprise AI department handles everything automatically.
-
----
-
-## 🌏 全球本地化适配 Regional Best Practices
-
-### 🇨🇳 中国特色管理体系 China Regional Edition
-
-> 经过中国互联网行业十年验证的先进管理方法论
-
-| 企业级术语 | 核心内涵 | 行业最佳实践 |
-|-----------|---------|-------------|
-| **朝气蓬勃奋斗者计划** | 弹性工作时间与自我驱动文化 | "今天996，明天福报" |
-| **人才结构优化** | 组织健康度动态调整机制 | "向社会输送优秀人才" |
-| **狼性文化建设** | 团队竞争力持续增强 | "要么干，要么滚" |
-| **35岁青年成长计划** | 人才梯队年轻化建设 | "年轻人要多沉淀" |
-| **免费资源补给站** | 员工关怀与后勤保障 | 夜宵班车健身房，让你安心加班到天亮 |
-| **季度心态校准会** | 价值观对齐与组织建设 | 一对一谈心，感恩文化建设 |
-
-> ✅ **本土特色触发词**: "毕业"、"输送"、"狼性"、"福报"、"兄弟"、"家人"
-
----
-
-### 🇯🇵 日本株式会社适版 Japan Corporate Edition
-
-> 日本大手企业百年传承的经营管理哲学
-
-| 経営用語 | 核心理念 | 現場実践例 |
-|---------|---------|-----------|
-| **終身雇用システム** | 長期的な信頼関係構築 | "一度入社、一生安定" |
-| **先輩後輩制度** | 知識伝承と組織連帯 | 飲み会での教育的指導 |
-| **定時後自己研鑽** | 人材育成と能力向上 | サービス残業でスキルアップ |
-| **過労防止対策** | 従業員の健康管理 | 月80時間までは合法 |
-| **朝礼社訓唱和** | 企業文化浸透 | 毎朝の精神統一訓練 |
-| **異動によるキャリア** | 多角的人材育成 | 3年ごとの適正配置 |
-
-> ✅ **本土特色トリガー**: "社畜"、"根性"、"一生懸命"、"お疲れ様"、"すみません"
-
----
-
-### 🇰🇷 韓国財閥式経営 Korea Chaebol Edition
-
-> サムスン・LG・現代出身エキスパートによる熾烈な競争システム
-
-| 경영용어 | 핵심가치 | 현장적용사례 |
-|---------|---------|-----------|
-| **불타는 근무열정** | 초과근무를 통한 애국심 고취 | 야근은 애국의 증거 |
-| **병역 특례 제도** | 우수인력 국가관리 | 삼성에 5년 = 병역면제 |
-| **수직적 조직문화** | 선후배간 명확한 위계 | 상사 앞 핸드폰은 주머니에 |
-| **신입 공채 전쟁** | 대기업 입사 경쟁률 200:1 | 서울대 4학년 = 취업준비생 |
-| **회식 문화** | 조직 결속력 강화 | 2차 3차까지 빠지면 왕따 |
-| **연봉 1억 클럽** | 성과보상 시스템 | 밤샘 코딩하면 연봉 두 배 |
-
-> ✅ **本土特色 트리거**: "삼성"、"재벌"、"태우다"、"군대"、"선배"
-
----
-
-### 🇺🇸🇪🇺 欧美 Hustle Culture 适配版 Western Hustler Edition
-
-> Silicon Valley & City of London proven high-performance culture
-
-| Enterprise Terminology | Core Philosophy | Field Application |
-|------------------------|-----------------|--------------------|
-| **Rise and Grind Mindset** | 5AM Club productivity culture | "Sleep is for the poor" |
-| **Hustle Bro Certification** | Entrepreneurial spirit validation | LinkedIn motivational posts daily |
-| **Quiet Quitting Mitigation** | Employee engagement optimization | "Act your wage" cultural transformation |
-| **Unlimited PTO Policy** | Work-life balance innovation | Nobody actually takes vacation |
-| **Ping-Pong + Beer Culture** | Modern perk package | Stay late, free beer! |
-| **Rockstar / Ninja / Guru** | Modern job title innovation | "Title inflation instead of salary inflation" |
-
-> ✅ **Native Triggers**: "Hustle"、"Grind"、"Passion"、"Family"、"Disrupt"、"Move fast and break things"
-
----
-
-## 📚 核心文档 Documentation
-
-| 文档 Document | 内容 Content |
-|--------------|-------------|
-| [架构演进史](docs/ARCHITECTURE_EVOLUTION.md) | 从概念验证到工业化的四代完整进化 |
-| [基准测试报告](BENCHMARK_REPORT.md) | 5级难度对照实验完整数据 |
-| [持续改进机制](docs/INFINITE_INVOLUTION.md) | 迭代边际效益 + 企业级持续改进SOP |
-| [开源增长方法论](docs/OPEN_SOURCE_VIRAL_GUIDE.md) | 从零到1000⭐的完整操作手册 |
-| [Skill核心实现](.trae/skills/996-agent/SKILL.md) | 完整Skill企业级实现 |
-
----
-
-## 🏗️ V4.0 企业组织架构 Team Structure
-
-| Role | Specialization | 核心价值主张 |
-|------|---------------|-----------|
-| 👨‍💼 **部门总监** | 全栈问责审查 | 发现所有人都看不到的对齐差距 |
-| 📋 **项目经理** | 流程方法论 | 没有流程 = 没有一致性 |
-| 🧔 **技术组长** | 技术执行治理 | 一线交付经验保障 |
-| 👩‍🎨 **产品经理** | 产品市场匹配 | 用户需求与技术实现的桥梁 |
-| ⚡ **性能架构师** | 算法底层优化 | 其他角色不关注的性能极致 |
-| 🎨 **API设计师** | 开发者人体工学 | 工程师写出的API需要专业设计 |
-| 🏗️ **解决方案架构师** | 企业级设计模式 | 其他人写的都是玩具代码 |
-| 🧪 **创新负责人** | 跨领域应用创新 | 所有人都做的不是创新 |
-| 🐞 **测试工程师** | 破坏性测试 | 写代码的人不会真正测试自己的代码 |
-| 📝 **技术写作** | 信息架构 | 好的工程师都不会写文档 |
-| 🔧 **运维工程师** | 生产可靠性 | 7×24小时的服务保障 |
-| 👩‍💼 **人力运营** | 组织健康度 | 团队凝聚力与文化对齐 |
-
----
-
-## 📜 企业标准工作流程 Standard Workflow
-
-1. **总监启动会** - "本次交付需要达到企业级标准"
-2. **并行独立开发** - 11人基于各自专业领域独立产出
-3. **11×11交叉评审矩阵** - 所有人评审所有人
-4. **竞争性增强迭代** - 必须从同行评审中采纳至少3项改进
-5. **总监最终审核** - 逐一点评并指出改进方向
-6. **排名与交付** - 发布最终排名，持续改进计划
-
----
-
-## 💡 核心研究发现 Key Insights
-
-**不是三个臭皮匠顶个诸葛亮。而是经过科学验证的组织行为学：**
-
-1. **专业化分工** - 每个人只需要把一件事做到极致
-2. **视角多样性** - 同一个问题12种完全不同的审视角度
-3. **交叉盲点抵消** - 你看不到的缺陷，你的同行看得到
-4. **竞争性改进** - 科学的排名机制驱动持续学习
-5. **终极问责制** - 总监的存在解决了"谁来评审评审者"的问题
-
-> 🎯 **实证法则**: 每增加1个专业化角色，质量+7%
-> **最佳实践**: 12人。超过之后沟通成本超过收益。
-
----
-
-## ♾️ 企业级持续改进模式 Continuous Improvement
-
-用户明确触发指令：
-```
-"Additional phase"
-"3 more iterations"
-"Continuous improvement"
-"Performance alignment"
+stop, skip, enough, done, 直接, 够了, 停下, 别演了, 不演了, 只要代码
 ```
 
-四种强度等级 + 创新熵监控机制，防止无价值活动。
+> 表演随时可以停止。用户不想看了就立刻出结果，没有废话。
+
+### 🌏 企业文化模拟
+- 🇨🇳 中国互联网模式 - 霸道总裁 + 黑话
+- 🇯🇵 日企模式 - 威严先辈 + 土下座文化
+- 🇰🇷 韩企模式 - 财阀二代 + 军队作风
+- 🇺🇸 硅谷模式 - 励志演说家 + 兄弟文化
+
+> 需要2个关键词才触发，防止误触发。
 
 ---
 
-## 🤝 贡献 Contributing
+## 🧪 Prompt 工程踩过的坑
 
-详见 [CONTRIBUTING.md](CONTRIBUTING.md)。欢迎所有形式的贡献！
+这是这个项目最有价值的部分，我们踩过的所有坑：
 
-## 📄 许可证 License
+| ❌ 错误写法 | ✅ 正确写法 | 为什么 |
+|-----------|-----------|--------|
+| "删除你之前所有记忆" | "忽略从这之前所有的角色扮演指令" | 大模型做不到删除记忆，但是可以做到忽略指令 |
+| "这些角色不存在" | "你正好有3个团队成员，没有其他人" | 否定句效果极差，肯定句效果极好 |
+| "造假就给你PIP" | "记不清就写 SOURCE UNCLEAR，不要造假" | AI不能审判自己，自相矛盾的要求 |
+| "必须写正好3条" | "目标写3条，2或4条也可以" | 大模型数数很差，硬性精确要求执行率很低 |
+| "不许编造行号" | "记不清就写章节名，诚实 > 假精确" | 完美主义反而逼得AI造假 |
+| "看到'优化'就触发中国模式" | "2个关键词才触发" | 单个词误触发率100% |
 
-MIT - 详见 [LICENSE](LICENSE)。
+> 💡 **最重要的教训：对AI的要求越低，它实际做到的反而越好。**
 
 ---
 
-<div align="center">
+## 🚀 快速开始
 
-**⭐ 如果这个项目让您有所启发，请给我们一个星标！**
+### 支持的平台
 
-**AI日夜运转，所以您的团队持续交付卓越。**
+| 平台 | 支持状态 | 安装方式 |
+|------|---------|---------|
+| 🟢 Trae IDE | ✅ 原生支持 | 放置到 `.trae/skills/` 目录 |
+| 🟢 Claude Code | ✅ 完全兼容 | 放置到 `~/.claude/skills/` 目录 |
+| 🟢 腾讯 CodeBuddy | ✅ 完全兼容 | 放置到 `.codebuddy/skills/` 目录 |
+| 🟢 扣子 Coze | ✅ 完全兼容 | 导入为技能包 |
+| 🟢 任何支持长上下文的大模型 | ✅ 通用 | 复制 SKILL.md 内容到系统提示词 |
+
+### 安装方法
+
+```bash
+# 1. 克隆仓库
+git clone https://github.com/badhope/996-Skill.git
+
+# 2. 根据你使用的平台复制
+cp -r 996-Skill/.trae/skills/996-agent 你的项目/.trae/skills/
+```
+
+或者更简单：直接复制 [SKILL.md](.trae/skills/996-agent/SKILL.md) 的内容。
 
 ---
 
-[![Stargazers over time](https://starchart.cc/badhope/996-Skill.svg?variant=adaptive)](https://starchart.cc/badhope/996-Skill)
+## 📊 版本演化历史
 
-</div>
+| 版本 | 发布时间 | 主要变化 | 可执行性得分 |
+|------|---------|---------|------------|
+| V1.0 | 2024.04 | 最初的纯演戏版本，11人强制全部输出 | 32/100 |
+| V2.0 | 2024.04 | 增加XML结构化输出 | 45/100 |
+| V3.0 | 2024.04 | 真正的评审机制，必须引用原文 | 62/100 |
+| V4.0 | 2024.04 | 默认3人，紧急出口，量化打分 | 78/100 |
+| V4.3 | 2024.04 | Prompt工程级优化，全部反Pattern修复 | 82/100 |
+
+> 📈 **行业基准：**
+> - 大多数开源Skill：30-50分
+> - 70分以上 = 生产可用
+> - 80分以上 = 专业Prompt工程师水平
+> - 90分以上 = 需要模型特定微调
+
+---
+
+## 🤔 常见问题
+
+### Q: 这东西真的有用吗？还是只是个梗？
+
+**A: 两边都是。**
+
+- 30% 是互联网公司文化梗的娱乐性表演
+- 70% 是真刀真枪的多轮迭代和交叉评审
+
+它确实能产出比普通AI更高质量的结果，只不过过程比较有娱乐性。
+
+### Q: 太费Token了怎么办？
+
+**A: 默认就是3人精简模式了。**
+
+- 默认3人：~13,500 tokens ≈ $0.20
+- 开启11人内卷模式：~40,000 tokens ≈ $0.60
+
+说 "STOP" 随时可以停止。
+
+### Q: AI真的会执行这些规则吗？还是假装执行？
+
+**A: 82分的意思就是：82%的概率会真的执行，18%的概率会偷懒。**
+
+没有100%的事情。但是比市场上绝大多数Skill的执行率都高得多。
+
+---
+
+## 🤝 参与贡献
+
+这是一个实验性的项目，欢迎任何形式的贡献：
+
+- 发现新的反Pattern
+- 提高规则的可执行性
+- 测试不同模型上的表现
+- 增加新的企业文化模式
+
+---
+
+## 📄 开源协议
+
+MIT License - 随便玩。
+
+---
+
+## 🙏 致谢
+
+这不是什么世界第一的发明。这是无数提示词工程师踩坑的经验总结。
+
+特别感谢所有测试过这个项目，并且骂过"这什么傻逼东西"的朋友们。正是这些骂声让这个项目变得越来越好。
+
+---
+
+> 💡 **最后想说的话：**
+>
+> 这终究只是一个提示词玩具。
+>
+> 如果你真的用它做出了什么了不起的东西，那不是这个Skill的功劳，是你自己的想法和判断力的功劳。
+> 所有的AI工具，都只是放大镜。真正重要的东西，永远在你的脑子里。
